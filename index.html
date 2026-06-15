@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jessa Daang — Content Strategist & Creative Designer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ============================================================
+       DESIGN TOKENS — edit these to change the entire site's look
+       ============================================================ */
+    :root {
+      --c-bg:       #FAFAF8;       /* off-white page background */
+      --c-surface:  #FFFFFF;       /* card / panel background */
+      --c-ink:      #181614;       /* primary text */
+      --c-muted:    #6B6560;       /* secondary text */
+      --c-rule:     #E8E4DF;       /* borders / dividers */
+      --c-accent:   #C94A1E;       /* signature terracotta-red */
+      --c-accent-lt:#FDF1ED;       /* accent tint */
+      --c-warm:     #F5EDE6;       /* warm cream block backgrounds */
+
+      --f-display:  'DM Serif Display', Georgia, serif;
+      --f-body:     'Inter', system-ui, sans-serif;
+      --f-mono:     'DM Mono', 'Courier New', monospace;
+
+      --radius:     12px;
+      --radius-sm:  6px;
+      --shadow-sm:  0 1px 4px rgba(0,0,0,.06);
+      --shadow-md:  0 4px 20px rgba(0,0,0,.08);
+      --shadow-lg:  0 12px 40px rgba(0,0,0,.12);
+      --transition: .3s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ============================================================
+       RESET & BASE
+       ============================================================ */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--f-body);
+      background: var(--c-bg);
+      color: var(--c-ink);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    ul { list-style: none; }
+
+    /* ============================================================
+       SCROLL REVEAL
+       ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .7s ease, transform .7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ============================================================
+       LAYOUT HELPERS
+       ============================================================ */
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .section-label {
+      font-family: var(--f-mono);
+      font-size: 20px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--c-accent);
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: var(--f-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.15;
+      color: var(--c-ink);
+      margin-bottom: 1.25rem;
+    }
+
+    .section-subtitle {
+      font-size: 1.05rem;
+      color: var(--c-muted);
+      max-width: 560px;
+      line-height: 1.75;
+    }
+
+    .section-header {
+      margin-bottom: 4rem;
+    }
+
+    section {
+      padding: 6rem 0;
+    }
+
+    .divider {
+      width: 40px;
+      height: 2px;
+      background: var(--c-accent);
+      margin: 1.25rem 0;
+    }
+
+    /* ============================================================
+       NAVIGATION
+       ============================================================ */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 900;
+      background: rgba(250,250,248,.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--c-rule);
+      transition: box-shadow var(--transition);
+    }
+    #nav.scrolled { box-shadow: var(--shadow-md); }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+      padding: 0 2rem;
+      max-width: 1160px;
+      margin: 0 auto;
+    }
+
+    .nav-logo {
+      font-family: var(--f-display);
+      font-size: 1.25rem;
+      color: var(--c-ink);
+      letter-spacing: -.01em;
+    }
+    .nav-logo span { color: var(--c-accent); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-links a {
+      font-size: .875rem;
+      font-weight: 500;
+      color: var(--c-muted);
+      transition: color var(--transition);
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--c-accent);
+      transition: width var(--transition);
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--c-ink);
+    }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    .nav-cta {
+      background: var(--c-accent) !important;
+      color: #fff !important;
+      padding: .5rem 1.25rem;
+      border-radius: 50px;
+      font-weight: 600 !important;
+      transition: opacity var(--transition) !important;
+    }
+    .nav-cta:hover { opacity: .85 !important; }
+    .nav-cta::after { display: none !important; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      width: 24px; height: 2px;
+      background: var(--c-ink);
+      border-radius: 2px;
+      transition: all var(--transition);
+    }
+
+    /* ============================================================
+       HERO
+       ============================================================ */
+    #hero {
+      padding-top: 140px;
+      padding-bottom: 80px;
+      background: var(--c-bg);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Ambient decorative circle */
+    #hero::before {
+      content: '';
+      position: absolute;
+      top: -120px; right: -180px;
+      width: 700px; height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--c-warm) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: var(--f-mono);
+      font-size: 20px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--c-accent);
+      margin-bottom: 1.5rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      width: 28px; height: 1.5px;
+      background: var(--c-accent);
+    }
+
+    .hero-name {
+      font-family: var(--f-display);
+      font-size: clamp(3rem, 6vw, 5.25rem);
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      color: var(--c-ink);
+      margin-bottom: .75rem;
+    }
+    .hero-name em {
+      font-style: italic;
+      color: var(--c-accent);
+    }
+
+    .hero-roles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .hero-role-tag {
+      font-size: .8rem;
+      font-weight: 500;
+      padding: .35rem .85rem;
+      border: 1.5px solid var(--c-rule);
+      border-radius: 50px;
+      color: var(--c-muted);
+      background: var(--c-surface);
+      transition: all var(--transition);
+    }
+    .hero-role-tag:hover {
+      border-color: var(--c-accent);
+      color: var(--c-accent);
+      background: var(--c-accent-lt);
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--c-muted);
+      line-height: 1.8;
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: var(--c-accent);
+      color: #fff;
+      padding: .85rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: .9rem;
+      transition: all var(--transition);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(201,74,30,.3);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      color: var(--c-ink);
+      padding: .85rem 2rem;
+      border-radius: 50px;
+      font-weight: 500;
+      font-size: .9rem;
+      border: 1.5px solid var(--c-rule);
+      transition: all var(--transition);
+    }
+    .btn-ghost:hover {
+      border-color: var(--c-accent);
+      color: var(--c-accent);
+    }
+
+    /* Hero photo card */
+    .hero-photo-card {
+      position: relative;
+    }
+    .hero-photo-wrap {
+      width: 100%;
+      aspect-ratio: 4/5;
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--c-warm);
+      position: relative;
+    }
+    .hero-photo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Placeholder avatar when no image is set */
+    .hero-photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      background: linear-gradient(145deg, var(--c-warm) 0%, var(--c-accent-lt) 100%);
+    }
+    .hero-photo-placeholder .initials {
+      font-family: var(--f-display);
+      font-size: 5rem;
+      color: var(--c-accent);
+      opacity: .4;
+    }
+    .hero-photo-placeholder .hint {
+      font-size: .75rem;
+      color: var(--c-muted);
+      text-align: center;
+      padding: 0 1.5rem;
+    }
+
+    .hero-badge {
+      position: absolute;
+      bottom: -20px; left: -20px;
+      background: var(--c-surface);
+      border: 1px solid var(--c-rule);
+      border-radius: var(--radius);
+      padding: 1rem 1.25rem;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      gap: .2rem;
+    }
+    .hero-badge-num {
+      font-family: var(--f-display);
+      font-size: 1.75rem;
+      line-height: 1;
+      color: var(--c-accent);
+    }
+    .hero-badge-label {
+      font-size: .72rem;
+      color: var(--c-muted);
+      font-weight: 500;
+    }
+
+    /* Stats row */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--c-rule);
+    }
+    .stat-item {}
+    .stat-value {
+      font-family: var(--f-display);
+      font-size: 2rem;
+      color: var(--c-accent);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: .8rem;
+      color: var(--c-muted);
+      margin-top: .3rem;
+    }
+
+    /* ============================================================
+       ABOUT
+       ============================================================ */
+    #about { background: var(--c-surface); }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--c-muted);
+      margin-bottom: 1.25rem;
+      line-height: 1.85;
+    }
+
+    .about-highlights {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .highlight-card {
+      background: var(--c-bg);
+      border: 1px solid var(--c-rule);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      transition: all var(--transition);
+    }
+    .highlight-card:hover {
+      border-color: var(--c-accent);
+      background: var(--c-accent-lt);
+    }
+    .highlight-card h4 {
+      font-size: .85rem;
+      font-weight: 600;
+      color: var(--c-ink);
+      margin-bottom: .4rem;
+    }
+    .highlight-card p {
+      font-size: .82rem;
+      color: var(--c-muted);
+      line-height: 1.5;
+    }
+
+    /* ============================================================
+       SKILLS
+       ============================================================ */
+    #skills { background: var(--c-bg); }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .skill-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-rule);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .skill-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--c-accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition);
+    }
+    .skill-card:hover {
+      border-color: transparent;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+    .skill-card:hover::after { transform: scaleX(1); }
+
+    .skill-card-icon {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+    }
+    .skill-card h4 {
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--c-ink);
+      margin-bottom: .75rem;
+    }
+    .skill-card .tools-label {
+      font-family: var(--f-mono);
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--c-accent);
+      margin-bottom: .4rem;
+    }
+    .skill-card p {
+      font-size: .85rem;
+      color: var(--c-muted);
+      line-height: 1.65;
+    }
+
+    /* ============================================================
+       EXPERIENCE
+       ============================================================ */
+    #experience { background: var(--c-surface); }
+
+    .exp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .exp-card {
+      background: var(--c-bg);
+      border: 1px solid var(--c-rule);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: all var(--transition);
+    }
+    .exp-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--c-accent);
+    }
+    .exp-card .exp-date {
+      font-family: var(--f-mono);
+      font-size: .72rem;
+      color: var(--c-accent);
+      letter-spacing: .06em;
+      margin-bottom: .6rem;
+    }
+    .exp-card h4 {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--c-ink);
+      margin-bottom: .25rem;
+    }
+    .exp-card .exp-company {
+      font-size: .85rem;
+      color: var(--c-muted);
+      margin-bottom: 1rem;
+    }
+    .exp-card ul {
+      display: flex;
+      flex-direction: column;
+      gap: .4rem;
+    }
+    .exp-card li {
+      font-size: .82rem;
+      color: var(--c-muted);
+      padding-left: 1rem;
+      position: relative;
+      line-height: 1.55;
+    }
+    .exp-card li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--c-accent);
+      font-size: .7rem;
+      top: .05em;
+    }
+
+    /* ============================================================
+       CLIENTS / TRUSTED BY
+       ============================================================
+       HOW TO ADD LOGOS:
+         Replace the placeholder <div class="client-logo-img"> blocks with:
+         <img src="path/to/logo.png" alt="Company Name" />
+         or use a publicly hosted URL.
+         You can also change the href links to any company URL.
+       ============================================================ */
+    #clients { background: var(--c-bg); }
+
+    .clients-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+    }
+
+    .client-tile {
+      background: var(--c-surface);
+      border: 1px solid var(--c-rule);
+      border-radius: var(--radius);
+      padding: 1.5rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+      transition: all var(--transition);
+      text-decoration: none;
+    }
+    .client-tile:hover {
+      border-color: var(--c-accent);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+    /* Default logo placeholder — remove once real logos are added */
+    .client-logo-img {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+    }
+    .client-logo-img img {
+      max-width: 120px;
+      max-height: 150px;
+      object-fit: contain;
+      filter: grayscale(100%);
+      opacity: .65;
+      transition: all var(--transition);
+    }
+    .client-tile:hover .client-logo-img img {
+      filter: none;
+      opacity: 1;
+    }
+    .client-logo-fallback {
+      font-weight: 700;
+      font-size: .8rem;
+      color: var(--c-muted);
+      text-align: center;
+      letter-spacing: .04em;
+    }
+    .client-logo-sub {
+      font-size: .65rem;
+      color: var(--c-rule);
+      text-align: center;
+    }
+
+    /* ============================================================
+       TESTIMONIALS
+       ============================================================
+       HOW TO EDIT:
+         Find the JS array `testimonials` near the bottom of the file.
+         Each object has: name, role, company, text.
+         Add or remove objects to change the carousel.
+       ============================================================ */
+    #testimonials { background: var(--c-warm); }
+
+    .testimonials-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .testimonials-track {
+      display: flex;
+      transition: transform .5s cubic-bezier(.4,0,.2,1);
+      will-change: transform;
+    }
+
+    .testimonial-card {
+      min-width: 100%;
+      padding: 0 2px; /* tiny gap to show card edge */
+    }
+
+    .testimonial-inner {
+      background: var(--c-surface);
+      border: 1px solid var(--c-rule);
+      border-radius: 20px;
+      padding: 3rem;
+      max-width: 760px;
+      margin: 0 auto;
+      position: relative;
+    }
+    .testimonial-inner::before {
+      content: '\201C';
+      font-family: var(--f-display);
+      font-size: 6rem;
+      line-height: .8;
+      color: var(--c-accent);
+      opacity: .18;
+      position: absolute;
+      top: 1.5rem; left: 2rem;
+    }
+
+    .testimonial-text {
+      font-size: 1.1rem;
+      line-height: 1.85;
+      color: var(--c-ink);
+      margin-bottom: 2rem;
+      font-style: italic;
+      position: relative;
+      z-index: 1;
+    }
+
+    .testimonial-author {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .author-avatar {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--c-accent-lt);
+      border: 2px solid var(--c-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: .85rem;
+      color: var(--c-accent);
+      flex-shrink: 0;
+    }
+    .author-name {
+      font-weight: 600;
+      font-size: .95rem;
+      color: var(--c-ink);
+    }
+    .author-role {
+      font-size: .8rem;
+      color: var(--c-muted);
+    }
+
+    .testimonials-controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .t-btn {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      border: 1.5px solid var(--c-rule);
+      background: var(--c-surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      color: var(--c-ink);
+    }
+    .t-btn:hover {
+      border-color: var(--c-accent);
+      color: var(--c-accent);
+    }
+
+    .t-dots {
+      display: flex;
+      gap: .5rem;
+    }
+    .t-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--c-rule);
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .t-dot.active {
+      background: var(--c-accent);
+      width: 24px;
+      border-radius: 4px;
+    }
+
+    /* ============================================================
+       CERTIFICATIONS
+       ============================================================ */
+    #certifications { background: var(--c-surface); }
+
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    .cert-card {
+      background: var(--c-bg);
+      border: 1px solid var(--c-rule);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      transition: all var(--transition);
+    }
+    .cert-card:hover {
+      border-color: var(--c-accent);
+      box-shadow: var(--shadow-md);
+    }
+    .cert-card-year {
+      font-family: var(--f-mono);
+      font-size: .7rem;
+      color: var(--c-accent);
+      letter-spacing: .08em;
+      margin-bottom: .6rem;
+    }
+    .cert-card h4 {
+      font-weight: 600;
+      font-size: .9rem;
+      color: var(--c-ink);
+      margin-bottom: .3rem;
+      line-height: 1.4;
+    }
+    .cert-card .cert-org {
+      font-size: .82rem;
+      color: var(--c-muted);
+    }
+    .cert-card a {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      margin-top: .75rem;
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--c-accent);
+      transition: opacity var(--transition);
+    }
+    .cert-card a:hover { opacity: .7; }
+
+    /* ============================================================
+       LANGUAGES
+       ============================================================ */
+    #languages { background: var(--c-bg); }
+
+    .lang-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .lang-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-rule);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      text-align: center;
+      transition: all var(--transition);
+    }
+    .lang-card:hover { border-color: var(--c-accent); }
+    .lang-card .lang-name {
+      font-weight: 600;
+      font-size: .95rem;
+      color: var(--c-ink);
+      margin-bottom: .35rem;
+    }
+    .lang-card .lang-level {
+      font-size: .78rem;
+      color: var(--c-accent);
+      font-family: var(--f-mono);
+    }
+
+    /* ============================================================
+       CONNECT / SOCIAL
+       ============================================================ */
+    #social { background: var(--c-surface); }
+
+    .social-flex {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .social-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      padding: .7rem 1.4rem;
+      border: 1.5px solid var(--c-rule);
+      border-radius: 50px;
+      font-size: .875rem;
+      font-weight: 500;
+      color: var(--c-ink);
+      transition: all var(--transition);
+    }
+    .social-pill svg { flex-shrink: 0; }
+    .social-pill:hover {
+      border-color: var(--c-accent);
+      color: var(--c-accent);
+      background: var(--c-accent-lt);
+    }
+
+    .portfolio-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* ============================================================
+       CONTACT
+       ============================================================ */
+    #contact {
+      background: var(--c-ink);
+      color: #fff;
+      padding: 7rem 0;
+      text-align: center;
+    }
+    #contact .section-label { color: rgba(255,255,255,.5); }
+    #contact .section-title { color: #fff; }
+    #contact .section-subtitle {
+      color: rgba(255,255,255,.6);
+      margin: 0 auto 3rem;
+    }
+
+    .contact-cards {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+    .contact-card {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: var(--radius);
+      padding: 1.75rem 2rem;
+      min-width: 220px;
+      transition: all var(--transition);
+    }
+    .contact-card:hover {
+      background: rgba(255,255,255,.1);
+      border-color: rgba(255,255,255,.3);
+    }
+    .contact-card-label {
+      font-size: .75rem;
+      font-family: var(--f-mono);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+      margin-bottom: .5rem;
+    }
+    .contact-card a {
+      font-weight: 600;
+      font-size: .95rem;
+      color: #fff;
+      transition: opacity var(--transition);
+    }
+    .contact-card a:hover { opacity: .7; }
+
+    .contact-cta { margin-top: 2rem; }
+    .btn-white {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: #fff;
+      color: var(--c-ink);
+      padding: .9rem 2.25rem;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: .9rem;
+      transition: all var(--transition);
+    }
+    .btn-white:hover {
+      background: var(--c-accent);
+      color: #fff;
+      transform: translateY(-2px);
+    }
+
+    /* ============================================================
+       FOOTER
+       ============================================================ */
+    footer {
+      background: #0E0C0A;
+      color: rgba(255,255,255,.35);
+      text-align: center;
+      padding: 2rem;
+      font-size: .8rem;
+    }
+    footer span { color: var(--c-accent); }
+
+    /* ============================================================
+       MOBILE NAV DRAWER
+       ============================================================ */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 68px; left: 0; right: 0;
+      background: var(--c-bg);
+      border-bottom: 1px solid var(--c-rule);
+      padding: 1.5rem 2rem;
+      z-index: 899;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--c-ink);
+      padding: .5rem 0;
+      border-bottom: 1px solid var(--c-rule);
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 1024px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-photo-card { max-width: 380px; margin: 0 auto; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+      .clients-row { grid-template-columns: repeat(3, 1fr); }
+      .exp-grid { grid-template-columns: 1fr; }
+      .certs-grid { grid-template-columns: 1fr 1fr; }
+      .lang-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .about-grid { grid-template-columns: 1fr; }
+      .about-highlights { grid-template-columns: 1fr 1fr; }
+      .skills-grid { grid-template-columns: 1fr; }
+      .clients-row { grid-template-columns: repeat(2, 1fr); }
+      .certs-grid { grid-template-columns: 1fr; }
+      .lang-grid { grid-template-columns: 1fr 1fr; }
+      .hero-stats { grid-template-columns: 1fr 1fr; }
+      section { padding: 4rem 0; }
+      .testimonial-inner { padding: 2rem; }
+    }
+
+    @media (max-width: 480px) {
+      .clients-row { grid-template-columns: 1fr 1fr; }
+      .hero-stats { grid-template-columns: 1fr; }
+      .contact-cards { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVIGATION
+       ============================================================ -->
+  <nav id="nav">
+    <div class="nav-inner">
+      <div class="nav-logo">Jessa <span>Daang</span></div>
+      <div class="nav-links">
+        <a href="#hero" class="nav-link active">Home</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#skills" class="nav-link">Skills</a>
+        <a href="#experience" class="nav-link">Experience</a>
+        <a href="#clients" class="nav-link">Clients</a>
+        <a href="#testimonials" class="nav-link">Testimonials</a>
+        <a href="#certifications" class="nav-link">Certs</a>
+        <a href="#contact" class="nav-link nav-cta">Let's Talk</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#hero">Home</a>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#experience">Experience</a>
+      <a href="#clients">Clients</a>
+      <a href="#testimonials">Testimonials</a>
+      <a href="#certifications">Certifications</a>
+      <a href="#social">Connect</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section id="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <!-- Left copy -->
+        <div>
+          <span class="hero-eyebrow reveal">Available for projects</span>
+          <h1 class="hero-name reveal">
+            Jessa<br /><em>Daang</em>
+          </h1>
+
+          <div class="hero-roles reveal">
+            <span class="hero-role-tag">Content Strategy</span>
+            <span class="hero-role-tag">UI/UX Design</span>
+            <span class="hero-role-tag">Social Media</span>
+            <span class="hero-role-tag">Digital Marketing</span>
+            <span class="hero-role-tag">Education</span>
+          </div>
+
+          <p class="hero-desc reveal">
+            Strategic, research-driven creative professional building cohesive brand
+            narratives through user-centered design, persuasive copy, and systems
+            that scale. 8+ years across startups, agencies, and international teams.
+          </p>
+
+          <div class="hero-actions reveal">
+            <a href="#contact" class="btn-primary">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              Let's Collaborate
+            </a>
+            <a href="https://drive.google.com/file/d/17r1OXgNiPmnQl3N8fQcngELkulhp5-a_/view?usp=sharing" target="_blank" class="btn-ghost">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download CV
+            </a>
+          </div>
+
+          <div class="hero-stats reveal">
+            <div class="stat-item">
+              <div class="stat-value">8+</div>
+              <div class="stat-label">Years of Experience</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">12+</div>
+              <div class="stat-label">Clients Served</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value">5</div>
+              <div class="stat-label">Disciplines Mastered</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right photo card -->
+        <div class="hero-photo-card reveal">
+          <div class="hero-photo-wrap">
+            <!--
+              ============================================================
+              PROFILE PHOTO — HOW TO ADD YOUR IMAGE:
+                Replace the <div class="hero-photo-placeholder"> block below
+                with: <img src="your-photo.jpg" alt="Jessa Daang" />
+                The image container is 4:5 aspect ratio and auto-crops.
+              ============================================================
+            -->
+            <div class="hero-photo-placeholder">
+              <img src="JD/Jessa Daang.png" alt="Jessa Daang"/>
+            </div>
+          </div>
+          <div class="hero-badge">
+            <span class="hero-badge-num">PH</span>
+            <span class="hero-badge-label">Based in Philippines</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT
+       ============================================================ -->
+  <section id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div>
+          <span class="section-label reveal">About Me</span>
+          <h2 class="section-title reveal">Where strategy<br />meets creativity</h2>
+          <div class="divider reveal"></div>
+          <div class="about-text reveal">
+            <p>I'm a strategic, creative, and research-driven professional with multidisciplinary experience across content strategy, social media management, UI/UX design, education, and digital marketing.</p>
+            <p>I specialize in building cohesive brand narratives through persuasive copy, user-centered design principles, and data-informed strategy. I've helped startups, agencies, academic institutions, and international teams improve engagement, strengthen brand positioning, and redesign digital experiences.</p>
+            <p>My approach combines structured thinking with creative problem-solving, always keeping audience psychology and usability at the forefront — at the intersection of technology, education, and behavioral design.</p>
+          </div>
+          <div style="margin-top:2rem;" class="reveal">
+            <a href="https://drive.google.com/file/d/17r1OXgNiPmnQl3N8fQcngELkulhp5-a_/view?usp=sharing" target="_blank" class="btn-ghost">
+              View Full CV →
+            </a>
+          </div>
+        </div>
+
+        <div class="about-highlights reveal">
+          <div class="highlight-card">
+            <h4>Strategy & Execution</h4>
+            <p>Own creative vision and build the systems that bring it to life</p>
+          </div>
+          <div class="highlight-card">
+            <h4>Full Creative Stack</h4>
+            <p>From brand positioning to final delivery across all mediums</p>
+          </div>
+          <div class="highlight-card">
+            <h4>Data-Informed</h4>
+            <p>Combining insights with creativity for measurable results</p>
+          </div>
+          <div class="highlight-card">
+            <h4>Collaborative</h4>
+            <p>Experienced in cross-functional teams and stakeholder alignment</p>
+          </div>
+          <div class="highlight-card">
+            <h4>Scalable Systems</h4>
+            <p>Building repeatable content and design systems for growth</p>
+          </div>
+          <div class="highlight-card">
+            <h4>Research-Driven</h4>
+            <p>UX research, audience insights, and behavioral psychology</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SKILLS
+       ============================================================ -->
+  <section id="skills">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label reveal">What I Do</span>
+        <h2 class="section-title reveal">Skills & Expertise</h2>
+        <p class="section-subtitle reveal">A full-stack creative discipline spanning strategy, design, content, and technology.</p>
+      </div>
+
+      <div class="skills-grid">
+        <div class="skill-card reveal">
+          <div class="skill-card-icon">🎨</div>
+          <h4>Design & Visual Communication</h4>
+          <div class="tools-label">Tools</div>
+          <p>Figma, Miro, Canva, Adobe Photoshop, Illustrator, Procreate, DaVinci Resolve</p>
+          <div class="tools-label" style="margin-top:.75rem;">Expertise</div>
+          <p>UI/UX Design, Design Systems, Wireframing, Prototyping, Brand Identity, Visual Storytelling</p>
+        </div>
+        <div class="skill-card reveal">
+          <div class="skill-card-icon">📱</div>
+          <h4>Content & Social Media</h4>
+          <div class="tools-label">Tools</div>
+          <p>Meta Business Suite, Metricool, Buffer, Apollo, Loomly</p>
+          <div class="tools-label" style="margin-top:.75rem;">Expertise</div>
+          <p>Content Strategy, Social Media Management, Copywriting, UX Writing, Editorial Planning, Brand Voice</p>
+        </div>
+        <div class="skill-card reveal">
+          <div class="skill-card-icon">🎬</div>
+          <h4>Video & Multimedia</h4>
+          <div class="tools-label">Tools</div>
+          <p>CapCut, Adobe Premiere, After Effects, DaVinci Resolve</p>
+          <div class="tools-label" style="margin-top:.75rem;">Expertise</div>
+          <p>Short-Form Video Editing, Brand Videos, Video Scripting, Performance Creatives, Motion Graphics</p>
+        </div>
+        <div class="skill-card reveal">
+          <div class="skill-card-icon">🤖</div>
+          <h4>AI & Emerging Tech</h4>
+          <div class="tools-label">Tools</div>
+          <p>ChatGPT, Claude, Leonardo AI, ElevenLabs, Gemini, Canva AI</p>
+          <div class="tools-label" style="margin-top:.75rem;">Expertise</div>
+          <p>AI-Assisted Content Creation, Generative Design, Workflow Automation</p>
+        </div>
+        <div class="skill-card reveal">
+          <div class="skill-card-icon">📊</div>
+          <h4>Project & Product Management</h4>
+          <div class="tools-label">Tools</div>
+          <p>Slack, Discord, Trello, Monday, ClickUp, Notion, Google Workspace</p>
+          <div class="tools-label" style="margin-top:.75rem;">Expertise</div>
+          <p>Project Coordination, QA, Stakeholder Management, Team Collaboration</p>
+        </div>
+        <div class="skill-card reveal">
+          <div class="skill-card-icon">💡</div>
+          <h4>Core Competencies</h4>
+          <div class="tools-label">Specialized In</div>
+          <p>Content Strategy, Brand Positioning, UX Research, User Testing, Copywriting, Technical Writing, Cross-Functional Collaboration</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       EXPERIENCE
+       ============================================================ -->
+  <section id="experience">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label reveal">Career Timeline</span>
+        <h2 class="section-title reveal">Professional Experience</h2>
+        <p class="section-subtitle reveal">8+ years across startups, agencies, government, and academia — locally and internationally.</p>
+      </div>
+
+      <div class="exp-grid">
+        <div class="exp-card reveal">
+          <div class="exp-date">Dec 2024 — Jan 2026</div>
+          <h4>Content Manager</h4>
+          <div class="exp-company">On-Off Group · Philippines</div>
+          <ul>
+            <li>Social media copywriting — captions, CTAs, content hooks</li>
+            <li>Content research, ideation, and editorial planning</li>
+            <li>Brand voice alignment across platforms</li>
+            <li>Reels and short-form video editing support</li>
+            <li>Graphic design and content production</li>
+          </ul>
+        </div>
+
+        <div class="exp-card reveal">
+          <div class="exp-date">Mar 2024 — Feb 2025</div>
+          <h4>Social Media Manager & UI/UX Designer</h4>
+          <div class="exp-company">Peak Solutions Team · Washington, US</div>
+          <ul>
+            <li>Content strategy and engagement optimization</li>
+            <li>Graphic design using Canva and design systems</li>
+            <li>Short-form video and Reels editing</li>
+            <li>UX research, wireframing, and website redesign via Figma</li>
+            <li>Quality assurance and product optimization</li>
+          </ul>
+        </div>
+
+        <div class="exp-card reveal">
+          <div class="exp-date">Mar 2024 — Dec 2024</div>
+          <h4>UI/UX Design Instructor (Part-Time)</h4>
+          <div class="exp-company">University of Immaculate Conception · Davao</div>
+          <ul>
+            <li>Teaching UI/UX fundamentals and research methodologies</li>
+            <li>UX writing and interface microcopy guidance</li>
+            <li>User journey mapping and persona development</li>
+            <li>Design critique and constructive feedback</li>
+          </ul>
+        </div>
+
+        <div class="exp-card reveal">
+          <div class="exp-date">Oct 2023 — Mar 2024</div>
+          <h4>Marketing Manager & Product Designer</h4>
+          <div class="exp-company">Specifit Solutions · Singapore</div>
+          <ul>
+            <li>Copywriting and graphic design for social platforms</li>
+            <li>Reels and short-form video production</li>
+            <li>Product design using Figma and design systems</li>
+          </ul>
+        </div>
+
+        <div class="exp-card reveal">
+          <div class="exp-date">Jun 2022 — Dec 2022</div>
+          <h4>UI/UX Designer</h4>
+          <div class="exp-company">Ingenuity Software · Davao City</div>
+          <ul>
+            <li>Web and mobile Figma prototypes</li>
+            <li>Graphics design for engagement and marketing</li>
+            <li>Event organization and product QA</li>
+          </ul>
+        </div>
+
+        <div class="exp-card reveal">
+          <div class="exp-date">Feb 2020 — Jan 2026</div>
+          <h4>Freelance — Social Media Strategist & Creative Designer</h4>
+          <div class="exp-company">Remote · Global</div>
+          <ul>
+            <li>Creative vision and brand positioning for founders</li>
+            <li>Content strategy across social, design, web, and video</li>
+            <li>Repeatable content systems for scale</li>
+            <li>Campaign ideation and cross-platform execution</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CLIENTS / TRUSTED BY
+       ============================================================
+       HOW TO ADD LOGOS:
+         For each .client-tile, replace the inner <div class="client-logo-img"> with:
+           <div class="client-logo-img">
+             <img src="https://yourdomain.com/logo.png" alt="Company Name" />
+           </div>
+         The image is auto-grayscaled at rest and becomes color on hover.
+         You can also host logos in the same folder as this HTML file.
+       ============================================================ -->
+  <section id="clients">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label reveal">Trusted By</span>
+        <h2 class="section-title reveal">Clients & Partners</h2>
+        <p class="section-subtitle reveal">Privileged to have worked with innovative companies and institutions across industries.</p>
+      </div>
+
+      <div class="clients-row reveal" id="clientsRow">
+        <!-- LOGO TILES — Edit href, title, and add <img> inside .client-logo-img -->
+        <a href="https://webpuppies.com.sg/" target="_blank" class="client-tile" title="Webpuppies">
+          <div class="client-logo-img">
+            <img src="Logos/webpuppies_logo.jfif" alt="Webpuppies" />
+            <!-- <div class="client-logo-fallback">Webpuppies</div> -->
+             <!-- <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a>
+        <a href="https://www.uic.edu.ph/" target="_blank" class="client-tile" title="University of Immaculate Conception">
+          <div class="client-logo-img">
+           <img src="Logos/UIC.png" alt="UIC" />
+            <div class="client-logo-fallback">UIC</div>
+             <!-- <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a>
+        <a href="https://www.addu.edu.ph/" target="_blank" class="client-tile" title="Ateneo de Davao University">
+          <div class="client-logo-img">
+            <img src="Logos/AdDU.png" alt="AdDU" /> 
+            <div class="client-logo-fallback">AdDU</div>
+             <!-- <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a>
+        <a href="https://ellensrealtyguam.com/" target="_blank" class="client-tile" title="Ellen's Realty Guam">
+          <div class="client-logo-img">
+            <img src="Logos/Ellen's Realty.png" alt="Ellen's Realty" />
+            <!-- <div class="client-logo-fallback">Ellen's Realty</div> -->
+            <!-- <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a>
+        <a href="https://www.ingenuity.ph/" target="_blank" class="client-tile" title="Ingenuity Software">
+          <div class="client-logo-img">
+            <img src="logos/Ingenuity.webp" alt="Ingenuity" />
+            <!-- <div class="client-logo-fallback">Ingenuity</div>
+            <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a>
+        <a href="https://tagumcity.gov.ph/" target="_blank" class="client-tile" title="City Government of Tagum">
+          <div class="client-logo-img">
+            <img src="logos/TagumCity.png" alt="City Government of Tagum" />
+            <div class="client-logo-fallback">Tagum City</div>
+            <!-- <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a>
+        <a href="https://www.xtendly.com/" target="_blank" class="client-tile" title="Xtendly">
+          <div class="client-logo-img">
+            <img src="logos/Xtendly.png" alt="Xtendly" />
+            <div class="client-logo-fallback">Xtendly</div>
+            <!-- <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a>
+        <a href="https://sc.judiciary.gov.ph/" target="_blank" class="client-tile" title="Supreme Court of the Philippines">
+          <div class="client-logo-img">
+            <img src="logos/SCLogo.webp" alt="Supreme Court PH" />
+            <div class="client-logo-fallback">SC Philippines</div>
+            <!-- <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a>
+        <a href="https://www.peaksolutionsteam.com/" target="_blank" class="client-tile" title="Peak Solutions Team">
+          <div class="client-logo-img">
+            <img src="logos/PSTLogo.jfif" alt="Peak Solutions" />
+          </div>
+        </a>
+        <a href="https://www.onoffgroup.com/" target="_blank" class="client-tile" title="On-Off Group">
+          <div class="client-logo-img">
+            <img src="logos/on-off group.png" alt="On-Off Group" />
+            <!-- <div class="client-logo-fallback">On-Off Group</div>
+            <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a>
+        <a href="https://www.prosperna.com/" target="_blank" class="client-tile" title="Prosperna">
+          <div class="client-logo-img">
+            <img src="logos/Prosperna.webp" alt="Prosperna" />
+            <!-- <div class="client-logo-fallback">Prosperna</div>
+            <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a>
+        <a href="https://500designs.com/" target="_blank" class="client-tile" title="500Designs">
+          <div class="client-logo-img">
+            <img src="logos/500Designs.png" alt="500Designs" />
+            <!-- <div class="client-logo-fallback">Prosperna</div>
+            <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a>       
+        <a href="https://www.facebook.com/okeytravelandtours/" target="_blank" class="client-tile" title="OKEY Travel and Tours">
+          <div class="client-logo-img">
+            <img src="logos/OKEY.png" alt="OKEY Travel and Tours" />
+            <!-- <div class="client-logo-fallback">Prosperna</div>
+            <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a> 
+        <a href="https://beehealed.co.uk/" target="_blank" class="client-tile" title="BEE HEALED">
+          <div class="client-logo-img">
+            <img src="logos/BeeHealed.webp" alt="BEE HEALED" />
+            <!-- <div class="client-logo-fallback">Prosperna</div>
+            <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a>
+        <a href="https://www.facebook.com/profile.php?id=61571787639562" target="_blank" class="client-tile" title="MC ORGANICS">
+          <div class="client-logo-img">
+            <img src="logos/MCOrganics.jpg" alt="MC ORGANICS" />
+            <!-- <div class="client-logo-fallback">Prosperna</div>
+            <div class="client-logo-sub">Add logo above</div> -->
+          </div>
+        </a>   
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TESTIMONIALS
+       ============================================================
+       HOW TO EDIT:
+         Scroll to the <script> section below and find the `testimonials` array.
+         Edit the name, role, company, and text fields of each object.
+         Add more objects to add more testimonials — the carousel auto-updates.
+       ============================================================ -->
+  <section id="testimonials">
+    <div class="container">
+      <div class="section-header" style="text-align:center;">
+        <span class="section-label reveal" style="display:block;text-align:center;">What They Say</span>
+        <h2 class="section-title reveal" style="text-align:center;">Client Testimonials</h2>
+      </div>
+
+      <div class="testimonials-wrap reveal">
+        <div class="testimonials-track" id="testimonialsTrack">
+          <!-- Cards injected by JS -->
+        </div>
+        <div class="testimonials-controls">
+          <button class="t-btn" id="tPrev" aria-label="Previous">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="t-dots" id="tDots"></div>
+          <button class="t-btn" id="tNext" aria-label="Next">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CERTIFICATIONS
+       ============================================================ -->
+  <section id="certifications">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label reveal">Education & Credentials</span>
+        <h2 class="section-title reveal">Certifications & Education</h2>
+      </div>
+
+      <div class="certs-grid">
+        <div class="cert-card reveal">
+          <div class="cert-card-year">2012 – 2016</div>
+          <h4>Bachelor of Science in Computer Science</h4>
+          <div class="cert-org">Ateneo de Davao University</div>
+        </div>
+        <div class="cert-card reveal">
+          <div class="cert-card-year">Jun – Sep 2021</div>
+          <h4>UX+ University Bootcamp</h4>
+          <div class="cert-org">UX Design & Research</div>
+        </div>
+        <div class="cert-card reveal">
+          <div class="cert-card-year">Sep 2021</div>
+          <h4>UX+ Conference Certificate</h4>
+          <div class="cert-org">User Experience Design</div>
+        </div>
+        <div class="cert-card reveal">
+          <div class="cert-card-year">Jun 2021</div>
+          <h4>UI Design Patterns</h4>
+          <div class="cert-org">Uxcel</div>
+          <a href="https://certificates.uxcel.com/U1RLT0JIWGTI" target="_blank">
+            View Certificate
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          </a>
+        </div>
+        <div class="cert-card reveal">
+          <div class="cert-card-year">Nov 2020</div>
+          <h4>UXPH Conference 2020</h4>
+          <div class="cert-org">User Experience Philippines</div>
+        </div>
+        <div class="cert-card reveal">
+          <div class="cert-card-year">Mar 2018</div>
+          <h4>Career Service Professional</h4>
+          <div class="cert-org">Professional Eligibility</div>
+        </div>
+        <div class="cert-card reveal">
+          <div class="cert-card-year">Completed</div>
+          <h4>HIPAA Certification</h4>
+          <div class="cert-org">Health Insurance Portability & Accountability</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       LANGUAGES
+       ============================================================ -->
+  <section id="languages">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label reveal">Multilingual</span>
+        <h2 class="section-title reveal">Languages</h2>
+      </div>
+      <div class="lang-grid">
+        <div class="lang-card reveal">
+          <div class="lang-name">English</div>
+          <div class="lang-level">Fluent</div>
+        </div>
+        <div class="lang-card reveal">
+          <div class="lang-name">Tagalog</div>
+          <div class="lang-level">Native Speaker</div>
+        </div>
+        <div class="lang-card reveal">
+          <div class="lang-name">Visaya (Cebuano)</div>
+          <div class="lang-level">Native Speaker</div>
+        </div>
+        <div class="lang-card reveal">
+          <div class="lang-name">Japanese</div>
+          <div class="lang-level">A1 — Beginner</div>
+        </div>
+        <div class="lang-card reveal">
+          <div class="lang-name">Thai</div>
+          <div class="lang-level">A0 — Basic</div>
+        </div>
+        <div class="lang-card reveal">
+          <div class="lang-name">Korean</div>
+          <div class="lang-level">A0 — Basic</div>
+        </div>
+        <div class="lang-card reveal">
+          <div class="lang-name">Chinese</div>
+          <div class="lang-level">A0 — Basic</div>
+        </div>
+        <div class="lang-card reveal">
+          <div class="lang-name">Spanish</div>
+          <div class="lang-level">A0 — Basic</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SOCIAL / CONNECT
+       ============================================================ -->
+  <section id="social">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label reveal">Find Me Online</span>
+        <h2 class="section-title reveal">Connect With Me</h2>
+        <p class="section-subtitle reveal">Follow my work, read my writing, or explore my designs across platforms.</p>
+      </div>
+
+      <div class="social-flex reveal">
+        <a href="https://www.linkedin.com/in/jessa-daang/" target="_blank" class="social-pill">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+          LinkedIn
+        </a>
+        <a href="https://medium.com/@jsdaang" target="_blank" class="social-pill">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/></svg>
+          Medium
+        </a>
+        <a href="https://www.behance.net/jsdaang" target="_blank" class="social-pill">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M22 7h-7V5h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.426.078.506.109 1.188.095 2.14H15.97c.13 3.211 3.483 3.312 4.588 2.029h3.168zm-7.686-4h4.965c-.105-1.547-1.136-2.219-2.477-2.219-1.466 0-2.277.768-2.488 2.219zM7.33 12.339c.029-.295.029-.59 0-.885 0-1.47-.952-2.454-2.338-2.454-1.364 0-2.363.984-2.42 2.454-.028.295-.028.59 0 .885.057 1.47 1.056 2.454 2.42 2.454 1.386 0 2.338-.984 2.338-2.454zM4.99 8h-3v7H1V4h4.99C8.358 4 9.5 5.028 9.5 6.5 9.5 7.765 8.685 8.718 7.5 9c1.215.313 2 1.367 2 2.646C9.5 13.372 8.155 15 5.74 15H2V9h2.99V8zM2 6v2h2.99c.972 0 1.51-.55 1.51-1s-.538-1-1.51-1H2z"/></svg>
+          Behance
+        </a>
+        <a href="https://www.instagram.com/artzebulb" target="_blank" class="social-pill">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+          Instagram (Art)
+        </a>
+      </div>
+
+      <div>
+        <p style="font-size:.85rem;color:var(--c-muted);margin-bottom:1rem;font-weight:500;">Portfolio Collections</p>
+        <div class="portfolio-links">
+          <a href="http://tinyurl.com/VA-JSD" target="_blank" class="btn-ghost">Social Media Portfolio →</a>
+          <a href="https://www.canva.com/design/DAEn0-W-1x4/w1NIKzv-xlP3tmLxz9u2bA/view" target="_blank" class="btn-ghost">UI/UX Design Portfolio →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT
+       ============================================================ -->
+  <section id="contact">
+    <div class="container">
+      <span class="section-label reveal">Get In Touch</span>
+      <h2 class="section-title reveal">Ready to create<br />something great?</h2>
+      <p class="section-subtitle reveal">Let's discuss your next project and how I can help bring your vision to life.</p>
+
+      <div class="contact-cards reveal">
+        <div class="contact-card">
+          <div class="contact-card-label">WhatsApp</div>
+          <a href="https://wa.me/639285527111" target="_blank">+63 928 552 7111</a>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-label">Email</div>
+          <a href="mailto:jsdaang.work@gmail.com">jsdaang.work@gmail.com</a>
+        </div>
+        <div class="contact-card">
+          <div class="contact-card-label">Location</div>
+          <a>Tagum City, Philippines</a>
+        </div>
+      </div>
+
+      <div class="contact-cta reveal">
+        <a href="https://drive.google.com/file/d/17r1OXgNiPmnQl3N8fQcngELkulhp5-a_/view?usp=sharing" target="_blank" class="btn-white">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download Full CV / Resume
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer>
+    <p>&copy; 2025 <span>Jessa Daang</span>. All rights reserved. · Based in Tagum City, Philippines · Available for Remote Collaboration</p>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================ -->
+  <script>
+    /* ============================================================
+       TESTIMONIALS DATA
+       To edit: change name, role, company, and text below.
+       To add: copy one object and paste inside the array with a comma.
+       ============================================================ */
+    const testimonials = [
+      {
+        name: "Sample Client",
+        role: "CEO",
+        company: "A Company",
+        text: "Jessa delivered far beyond what we expected, her ability to translate brand strategy into compelling visual content and copy elevated our entire online presence. A rare combination of creative skill and strategic thinking."
+      },
+      {
+        name: "Sample Colleague",
+        role: "Product Manager",
+        company: "Peak Solutions Team",
+        text: "Working with Jessa was a pleasure from start to finish. She has an exceptional eye for design and an intuitive understanding of how users think. Her Figma prototypes were ready for development on day one."
+      },
+      {
+        name: "Sample Student",
+        role: "Former Student",
+        company: "UIC Davao",
+        text: "Jessa is one of the most inspiring instructors I've had. She has a gift for making complex UX concepts approachable and always encouraged us to think critically and empathetically about the people we design for."
+      },
+      {
+        name: "Sample Collaborator",
+        role: "Marketing Director",
+        company: "Specifit Solutions",
+        text: "The content systems Jessa built for us are still running strong. She didn't just create posts, she created a repeatable framework that our team could scale. The results spoke for themselves in our engagement metrics."
+      }
+    ];
+
+    /* Render testimonial cards */
+    const track = document.getElementById('testimonialsTrack');
+    const dotsContainer = document.getElementById('tDots');
+    let current = 0;
+    let autoTimer;
+
+    function renderTestimonials() {
+      track.innerHTML = '';
+      dotsContainer.innerHTML = '';
+
+      testimonials.forEach((t, i) => {
+        const initials = t.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+        const card = document.createElement('div');
+        card.className = 'testimonial-card';
+        card.innerHTML = `
+          <div class="testimonial-inner">
+            <p class="testimonial-text">"${t.text}"</p>
+            <div class="testimonial-author">
+              <div class="author-avatar">${initials}</div>
+              <div>
+                <div class="author-name">${t.name}</div>
+                <div class="author-role">${t.role} · ${t.company}</div>
+              </div>
+            </div>
+          </div>`;
+        track.appendChild(card);
+
+        const dot = document.createElement('div');
+        dot.className = 't-dot' + (i === 0 ? ' active' : '');
+        dot.addEventListener('click', () => goTo(i));
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    function goTo(index) {
+      current = (index + testimonials.length) % testimonials.length;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      document.querySelectorAll('.t-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === current);
+      });
+    }
+
+    function startAuto() {
+      autoTimer = setInterval(() => goTo(current + 1), 5000);
+    }
+
+    function resetAuto() {
+      clearInterval(autoTimer);
+      startAuto();
+    }
+
+    renderTestimonials();
+    startAuto();
+
+    document.getElementById('tPrev').addEventListener('click', () => { goTo(current - 1); resetAuto(); });
+    document.getElementById('tNext').addEventListener('click', () => { goTo(current + 1); resetAuto(); });
+
+    /* ============================================================
+       SCROLL REVEAL
+       ============================================================ */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    /* ============================================================
+       NAV SCROLL SHADOW & ACTIVE LINK
+       ============================================================ */
+    const nav = document.getElementById('nav');
+
+    function updateNav() {
+      nav.classList.toggle('scrolled', window.scrollY > 20);
+
+      const sections = document.querySelectorAll('section[id]');
+      const links = document.querySelectorAll('.nav-link');
+      let active = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 120) active = s.id;
+      });
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === '#' + active));
+    }
+
+    window.addEventListener('scroll', updateNav, { passive: true });
+
+    /* ============================================================
+       SMOOTH SCROLL
+       ============================================================ */
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth' });
+          // close mobile menu
+          document.getElementById('mobileMenu').classList.remove('open');
+        }
+      });
+    });
+
+    /* ============================================================
+       HAMBURGER / MOBILE MENU
+       ============================================================ */
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    hamburger.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
+    });
+
+    /* ============================================================
+       STAGGER REVEAL within grids
+       ============================================================ */
+    document.querySelectorAll('.skills-grid .skill-card, .exp-grid .exp-card, .certs-grid .cert-card, .lang-grid .lang-card').forEach((el, i) => {
+      el.style.transitionDelay = `${(i % 3) * 80}ms`;
+    });
+  </script>
+</body>
+</html>
